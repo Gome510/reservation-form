@@ -10,14 +10,6 @@ const ReservationForm = () => {
     setPeopleCount(e.target.value);
   };
 
-  const handleDateChange = (e) => {
-    setDate(e.target.value);
-  };
-
-  const handleTimeChange = (e) => {
-    setTime(e.target.value);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -56,12 +48,12 @@ const ReservationForm = () => {
         </div>
 
         <div>
-          <div>
+          <div className="w-6">
             <label className="" htmlFor="time">
               Pick a Time:
             </label>
           </div>
-          <div>
+          <div className="w-6">
             <DatePicker
               date={date}
               disabledDates={disabledDates}
