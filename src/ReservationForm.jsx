@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import DatePicker from "./DatePicker";
+import DateTime from "./DateTime";
+import { Calendar } from "primereact/calendar";
 
 const ReservationForm = () => {
   const [peopleCount, setPeopleCount] = useState(1);
   const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
   const [disabledDates, setDisabledDates] = useState([]);
 
   const handlePeopleCountChange = (e) => {
@@ -33,7 +35,7 @@ const ReservationForm = () => {
       <form onSubmit={handleSubmit}>
         <div className="flex flex-column">
           <label className="" htmlFor="peopleCount">
-            Party Size:
+            Party Size
           </label>
           <input
             className="p-2 mt-2 mb-2 border-none border-bottom-2 border-300 h-2rem"
@@ -47,21 +49,14 @@ const ReservationForm = () => {
           />
         </div>
 
-        <div>
-          <div className="w-6">
-            <label className="" htmlFor="time">
-              Pick a Time:
-            </label>
-          </div>
-          <div className="w-6">
-            <DatePicker
-              date={date}
-              disabledDates={disabledDates}
-              onDateChange={onDateChange}
-              setDisabledDates={setDisabledDates}
-            />
-          </div>
-        </div>
+        <DateTime
+          time={time}
+          setTime={setTime}
+          date={date}
+          disabledDates={disabledDates}
+          onDateChange={onDateChange}
+          setDisabledDates={setDisabledDates}
+        />
 
         <div className="flex justify-content-center">
           <button
