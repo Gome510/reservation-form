@@ -1,30 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DateTime from "./DateTime";
-import { Calendar } from "primereact/calendar";
+import {
+  generateRandomDays,
+  generateHalfHourIntervals,
+  generateRandomTimes,
+  getNearestTimes,
+  formatDateToUSFormat,
+} from "./utils";
+import PickAvailableTime from "./PickAvailableTime";
 
 const ReservationForm = () => {
   const [peopleCount, setPeopleCount] = useState(1);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [disabledDates, setDisabledDates] = useState([]);
+  const [disabledTimes, setDisabledTimes] = useState([]);
+  const [availableTimes, setAvailableTimes] = useState([]);
 
-  const handlePeopleCountChange = (e) => {
+  useEffect(() => {
+    setDisabledDates(generateRandomDays(31, 7));
+  }, []);
+
+  useEffect(() => {
+    const halfHourIntervals = generateHalfHourIntervals();
+    setDisabledTimes(generateRandomTimes(halfHourIntervals, 5));
+  }, [date]);
+
+  //console.log(disabledTimes);
+
+  function handlePeopleCountChange(e) {
     setPeopleCount(e.target.value);
-  };
+  }
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e, selectedTime) {
     e.preventDefault();
 
     console.log("Form submitted with the following data:");
     console.log("Number of People:", peopleCount);
-    console.log("Date:", date);
-    console.log("Time:", time);
-  };
+    console.log("Date:", formatDateToUSFormat(date));
+    console.log("Time:", selectedTime);
+  }
+
+  function handleFindTime() {
+    const availableTimes = getNearestTimes(
+      time,
+      generateHalfHourIntervals(),
+      disabledTimes,
+      5
+    );
+    setAvailableTimes(availableTimes);
+  }
 
   function onDateChange(e) {
     if (!disabledDates.includes(e.value.getDate())) {
       setDate(e.value);
     }
+  }
+
+  function onTimeChange(e) {
+    setTime(e.value);
   }
 
   return (
@@ -51,21 +85,23 @@ const ReservationForm = () => {
 
         <DateTime
           time={time}
-          setTime={setTime}
+          onTimeChange={onTimeChange}
           date={date}
           disabledDates={disabledDates}
           onDateChange={onDateChange}
-          setDisabledDates={setDisabledDates}
         />
 
-        <div className="flex justify-content-center">
+        <div className="flex justify-content-center mb-2">
           <button
             className="w-12 bg-green-700 text-white font-bold border-round border-none h-3rem mt-3"
-            type="submit"
+            type="button"
+            onClick={handleFindTime}
           >
-            Book
+            Find a Time
           </button>
         </div>
+
+        <PickAvailableTime times={availableTimes} handleSubmit={handleSubmit} />
       </form>
     </div>
   );
