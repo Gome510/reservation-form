@@ -1,12 +1,14 @@
 import { Button } from "primereact/button";
 
-function PickAvailableTime({ times, handleSubmit }) {
+function PickAvailableTime({ times, onTimeChange }) {
   const timeButtons = times.map((time) => (
     <Button
-      onClick={(e) => handleSubmit(e, time.label)}
+      onClick={(e) => onTimeChange(e)}
       className="p-2 bg-green-600"
       size="small"
+      type="button"
       key={time.label}
+      value={time.time}
     >
       {time.label}
     </Button>

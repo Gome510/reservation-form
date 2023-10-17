@@ -8,6 +8,7 @@ import {
   formatDateToUSFormat,
 } from "./utils";
 import PickAvailableTime from "./PickAvailableTime";
+import SeatingRadio from "./SeatingRadio";
 
 const ReservationForm = () => {
   const [peopleCount, setPeopleCount] = useState(1);
@@ -16,6 +17,7 @@ const ReservationForm = () => {
   const [disabledDates, setDisabledDates] = useState([]);
   const [disabledTimes, setDisabledTimes] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [seating, setSeating] = useState("");
 
   useEffect(() => {
     setDisabledDates(generateRandomDays(31, 7));
@@ -25,8 +27,6 @@ const ReservationForm = () => {
     const halfHourIntervals = generateHalfHourIntervals();
     setDisabledTimes(generateRandomTimes(halfHourIntervals, 5));
   }, [date]);
-
-  //console.log(disabledTimes);
 
   function handlePeopleCountChange(e) {
     setPeopleCount(e.target.value);
@@ -61,6 +61,11 @@ const ReservationForm = () => {
     setTime(e.value);
   }
 
+  function handleSeatingChange(e) {
+    setSeating(e.value);
+  }
+
+  console.log(time);
   return (
     <div className="w-30rem m-auto border-solid surface-border border-round p-3">
       <h2 className="pb-3 border-bottom-2 border-300 text-center">
@@ -101,7 +106,19 @@ const ReservationForm = () => {
           </button>
         </div>
 
-        <PickAvailableTime times={availableTimes} handleSubmit={handleSubmit} />
+        {availableTimes.length > 0 && (
+          <PickAvailableTime
+            times={availableTimes}
+            onTimeChange={onTimeChange}
+          />
+        )}
+
+        {seating && (
+          <SeatingRadio
+            seating={seating}
+            handleSeatingChange={handleSeatingChange}
+          />
+        )}
       </form>
     </div>
   );
