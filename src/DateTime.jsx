@@ -3,13 +3,7 @@ import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { generateHalfHourIntervals } from "./utils";
 
-export default function DateTime({
-  time,
-  date,
-  onTimeChange,
-  onDateChange,
-  disabledDates,
-}) {
+export default function DateTime({ formData, handleChange, disabledDates }) {
   function dateTemplate(date) {
     if (disabledDates.includes(date.day)) {
       return (
@@ -31,9 +25,10 @@ export default function DateTime({
         </label>
         <Dropdown
           inputId="time"
-          value={time}
+          name="time"
+          value={formData.time}
           optionLabel="label"
-          onChange={onTimeChange}
+          onChange={handleChange}
           options={halfHourIntervals}
         />
       </div>
@@ -44,9 +39,10 @@ export default function DateTime({
           </label>
           <Calendar
             inputId="calendar"
+            name="date"
             className="w-full h-full"
-            value={date}
-            onChange={onDateChange}
+            value={formData.date}
+            onChange={handleChange}
             dateTemplate={dateTemplate}
           />
         </div>

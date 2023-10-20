@@ -3,10 +3,10 @@ import { RadioButton } from "primereact/radiobutton";
 function SeatingRadio({ seating, handleSeatingChange }) {
   return (
     <div className="card">
-      <label htmlFor="seating" className="mb-1">
+      <label htmlFor="seating" className="">
         Seating
       </label>
-      <div id="seating" className="flex flex-wrap gap-3">
+      <div id="seating" className="flex flex-wrap gap-3 mt-1">
         <div className="flex align-items-center">
           <RadioButton
             inputId="seating1"
