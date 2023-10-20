@@ -15,8 +15,8 @@ function PickAvailableTime({ times, onTimeChange }) {
   ));
   //console.log(times);
   return (
-    <div className="">
-      <label htmlFor="available-times">Pick an Available Time</label>
+    <div className="mb-2">
+      <label htmlFor="available-times mb-1">Pick an Available Time</label>
       <div className="flex justify-content-between" id="available-times">
         {timeButtons}
       </div>

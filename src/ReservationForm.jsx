@@ -61,11 +61,17 @@ const ReservationForm = () => {
     setTime(e.value);
   }
 
+  function onPickAvailableTime(e) {
+    onTimeChange(e);
+    setSeating("Standard");
+  }
+
   function handleSeatingChange(e) {
     setSeating(e.value);
   }
 
   console.log(time);
+
   return (
     <div className="w-30rem m-auto border-solid surface-border border-round p-3">
       <h2 className="pb-3 border-bottom-2 border-300 text-center">
@@ -73,7 +79,7 @@ const ReservationForm = () => {
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-column">
-          <label className="" htmlFor="peopleCount">
+          <label className="mb-1" htmlFor="peopleCount">
             Party Size
           </label>
           <input
@@ -109,7 +115,7 @@ const ReservationForm = () => {
         {availableTimes.length > 0 && (
           <PickAvailableTime
             times={availableTimes}
-            onTimeChange={onTimeChange}
+            onTimeChange={onPickAvailableTime}
           />
         )}
 

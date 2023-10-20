@@ -26,10 +26,11 @@ export default function DateTime({
   return (
     <div className="flex justify-content-between">
       <div className="flex flex-column w-5">
-        <label className="" htmlFor="time">
+        <label className="mb-1" htmlFor="time">
           Time
         </label>
         <Dropdown
+          inputId="time"
           value={time}
           optionLabel="label"
           onChange={onTimeChange}
@@ -38,11 +39,11 @@ export default function DateTime({
       </div>
       <div className="w-5">
         <div className="card flex flex-column">
-          <label className="" htmlFor="calendar">
+          <label className="mb-1" htmlFor="calendar">
             Date
           </label>
           <Calendar
-            id="calendar"
+            inputId="calendar"
             className="w-full h-full"
             value={date}
             onChange={onDateChange}
