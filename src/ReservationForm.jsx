@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import DateTime from "./DateTime";
+import DateTime from "./components/DateTime";
 import {
   generateRandomDays,
   generateHalfHourIntervals,
@@ -7,25 +7,35 @@ import {
   getNearestTimes,
   formatDateToUSFormat,
 } from "./utils";
-import PickAvailableTime from "./PickAvailableTime";
-import SeatingRadio from "./SeatingRadio";
-import CustomerInfo from "./CustomerInfo";
+import PickAvailableTime from "./components/PickAvailableTime";
+import SeatingRadio from "./components/SeatingRadio";
+import CustomerInfo from "./components/CustomerInfo";
+import { Button } from "primereact/button";
+import { InputNumber } from "primereact/inputnumber";
+import { useContext } from "react";
+import { useMountEffect } from "primereact/hooks";
+import { PrimeReactContext } from "primereact/api";
+import { Ripple } from "primereact/ripple";
 
-const ReservationForm = () => {
+function ReservationForm() {
   const [formData, setFormData] = useState({
     peopleCount: 1,
     date: new Date(),
-    time: {},
-    seating,
+    time: "",
+    seating: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    email: "",
+    occasion: "",
+    specialRequest: "",
 
     // Add other form fields here
   });
-
+  const [searchTime, setSearchTime] = useState({});
   const [disabledDates, setDisabledDates] = useState([]);
   const [disabledTimes, setDisabledTimes] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
-  const [seating, setSeating] = useState("");
-  const [customerInfo, setCustomerInfo] = useState({});
 
   useEffect(() => {
     setDisabledDates(generateRandomDays(31, 7));
@@ -36,8 +46,15 @@ const ReservationForm = () => {
     setDisabledTimes(generateRandomTimes(halfHourIntervals, 5));
   }, [formData.date]);
 
+  useMountEffect(() => {
+    setRipple(true);
+  });
+
+  const { setRipple } = useContext(PrimeReactContext);
+
   function handleChange(event) {
     const { name, value } = event.target;
+    console.log({ name, value });
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -51,12 +68,11 @@ const ReservationForm = () => {
     console.log("Number of People:", formData.peopleCount);
     console.log("Date:", formatDateToUSFormat(formData.date));
     console.log("Time:", selectedTime);
-    // Add other form field values here
   }
 
   function handleFindTime() {
     const availableTimes = getNearestTimes(
-      formData.time,
+      searchTime,
       generateHalfHourIntervals(),
       disabledTimes,
       5
@@ -64,9 +80,7 @@ const ReservationForm = () => {
     setAvailableTimes(availableTimes);
   }
 
-  // Add other form field change functions
-
-  console.log(formData.time);
+  console.log(formData);
 
   return (
     <div className="w-30rem m-auto border-solid surface-border border-round p-3">
@@ -78,56 +92,66 @@ const ReservationForm = () => {
           <label className="mb-1" htmlFor="peopleCount">
             Party Size
           </label>
-          <input
-            className="p-2 mt-2 mb-2 border-none border-bottom-2 border-300 h-2rem"
-            type="number"
+          <InputNumber
             id="peopleCount"
-            name="peopleCount"
+            className="mt-2 mb-2"
+            name={formData.peopleCount}
             value={formData.peopleCount}
-            onChange={handleChange}
+            onValueChange={handleChange}
             min={1}
             max={20}
           />
         </div>
 
         <DateTime
+          searchTime={searchTime}
+          onSearchTimeChange={setSearchTime}
           formData={formData}
           handleChange={handleChange}
           disabledDates={disabledDates}
         />
 
-        <div className="flex justify-content-center mb-2">
-          <button
-            className="w-12 bg-green-700 text-white font-bold border-round border-none h-3rem mt-3"
+        <div className="flex mb-2 text-center ">
+          <Button
+            className="w-12 bg-green-700 flex justify-content-center  h-3rem mt-3"
             type="button"
             onClick={handleFindTime}
           >
             Find a Time
-          </button>
+            <Ripple />
+          </Button>
         </div>
 
         {availableTimes.length > 0 && (
           <PickAvailableTime
             times={availableTimes}
-            onTimeChange={handleChange} // You can update this to match your PickAvailableTime component
+            formData={formData}
+            onTimeChange={handleChange}
           />
         )}
 
-        {seating && (
-          <>
-            <SeatingRadio
-              seating={seating}
-              handleSeatingChange={handleChange} // You can update this to match your SeatingRadio component
-            />
-            <CustomerInfo
-              info={customerInfo}
-              handleCustomerInfoChange={setCustomerInfo}
-            />
-          </>
+        {formData.time != "" && (
+          <SeatingRadio
+            seating={formData.seating}
+            handleSeatingChange={handleChange}
+          />
         )}
+
+        {formData.seating != "" && (
+          <CustomerInfo formData={formData} handleChange={handleChange} />
+        )}
+
+        {formData.email != "" &&
+          formData.phoneNumber != "" &&
+          formData.firstName != "" &&
+          formData.lastName && (
+            <div className="flex justify-content-center ">
+              <Button className="bg-green-700">Reserve</Button>
+            </div>
+          )}
       </form>
     </div>
   );
-};
+}
 
 export default ReservationForm;

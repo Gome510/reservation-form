@@ -1,19 +1,28 @@
 import { Button } from "primereact/button";
 
-function PickAvailableTime({ times, onTimeChange }) {
+function PickAvailableTime({ times, formData, onTimeChange }) {
+  const bgGreen = "p-2 bg-green-600";
+  const bgGray = "p-2 bg-gray-500";
   const timeButtons = times.map((time) => (
     <Button
       onClick={(e) => onTimeChange(e)}
-      className="p-2 bg-green-600"
+      className={
+        formData.time == time.label || formData.time == "" ? bgGreen : bgGray
+      }
       size="small"
       type="button"
+      name="time"
       key={time.label}
-      value={time.time}
+      value={time.label}
     >
       {time.label}
     </Button>
   ));
-  //console.log(times);
+
+  const bgGrey = {
+    backgroundColor: "grey",
+  };
+
   return (
     <div className="mb-2">
       <label className="" htmlFor="available-times">

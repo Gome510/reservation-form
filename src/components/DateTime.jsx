@@ -1,9 +1,15 @@
 import React from "react";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
-import { generateHalfHourIntervals } from "./utils";
+import { generateHalfHourIntervals } from "../utils";
 
-export default function DateTime({ formData, handleChange, disabledDates }) {
+export default function DateTime({
+  searchTime,
+  onSearchTimeChange,
+  formData,
+  handleChange,
+  disabledDates,
+}) {
   function dateTemplate(date) {
     if (disabledDates.includes(date.day)) {
       return (
@@ -26,9 +32,9 @@ export default function DateTime({ formData, handleChange, disabledDates }) {
         <Dropdown
           inputId="time"
           name="time"
-          value={formData.time}
+          value={searchTime}
           optionLabel="label"
-          onChange={handleChange}
+          onChange={(e) => onSearchTimeChange(e.value)}
           options={halfHourIntervals}
         />
       </div>

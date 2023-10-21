@@ -2,7 +2,7 @@ import { RadioButton } from "primereact/radiobutton";
 
 function SeatingRadio({ seating, handleSeatingChange }) {
   return (
-    <div className="card">
+    <div className="card mb-2">
       <label htmlFor="seating" className="">
         Seating
       </label>
