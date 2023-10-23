@@ -5,9 +5,15 @@ export function generateHalfHourIntervals() {
 
   for (let hour = startHour; hour <= endHour; hour++) {
     for (let minute = 0; minute < 60; minute += 30) {
-      const label = `${hour.toString().padStart(2, "0")}:${
-        minute === 0 ? "00" : minute
-      } ${hour < 12 ? "AM" : "PM"}`;
+      //12-hour format
+      const newHour =
+        hour > 12
+          ? (hour - 12).toString().padStart(2, "0")
+          : hour.toString().padStart(2, "0");
+
+      const label = `${newHour}:${minute === 0 ? "00" : minute} ${
+        hour < 12 ? "AM" : "PM"
+      }`;
       const time = { hour, minute };
       intervals.push({ label, time });
     }
