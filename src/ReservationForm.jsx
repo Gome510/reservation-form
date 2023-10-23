@@ -54,7 +54,6 @@ function ReservationForm() {
 
   function handleChange(event) {
     const { name, value } = event.target;
-    console.log({ name, value });
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -79,8 +78,6 @@ function ReservationForm() {
     );
     setAvailableTimes(availableTimes);
   }
-
-  console.log(formData);
 
   return (
     <div className="w-30rem m-auto border-solid surface-border border-round p-3">
