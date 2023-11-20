@@ -16,6 +16,13 @@ import { useContext } from "react";
 import { useMountEffect } from "primereact/hooks";
 import { PrimeReactContext } from "primereact/api";
 import { Ripple } from "primereact/ripple";
+import { db } from "./database/firebase";
+import { addDoc, collection } from "firebase/firestore";
+
+const reservationRef = collection(
+  db,
+  "/restaurants/42mt6ld14dxeYy18rSMN/reservations"
+);
 
 function ReservationForm() {
   const [formData, setFormData] = useState({
@@ -42,7 +49,7 @@ function ReservationForm() {
   }, []);
 
   useEffect(() => {
-    const halfHourIntervals = generateHalfHourIntervals();
+    const halfHourIntervals = generateHalfHourIntervals(0, 23);
     setDisabledTimes(generateRandomTimes(halfHourIntervals, 5));
   }, [formData.date]);
 
@@ -60,19 +67,37 @@ function ReservationForm() {
     }));
   }
 
-  function handleSubmit(e, selectedTime) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    try {
+      await addDoc(reservationRef, {
+        date: formatDateToUSFormat(formData.date),
+        occasion: formData.occasion,
+        requests: formData.specialRequest,
+        reservedBy: {
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phoneNumber,
+        },
+        seating: formData.seating,
+        time: formData.time,
+        count: formData.peopleCount,
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
     console.log("Form submitted with the following data:");
     console.log("Number of People:", formData.peopleCount);
     console.log("Date:", formatDateToUSFormat(formData.date));
-    console.log("Time:", selectedTime);
+    console.log("Time:", formData.time);
   }
 
   function handleFindTime() {
     const availableTimes = getNearestTimes(
       searchTime,
-      generateHalfHourIntervals(),
+      generateHalfHourIntervals(0, 23),
       disabledTimes,
       5
     );
@@ -84,7 +109,7 @@ function ReservationForm() {
       <h2 className="pb-3 border-bottom-2 border-300 text-center">
         Make a reservation
       </h2>
-      <form onSubmit={(e) => handleSubmit(e, selectedTime)}>
+      <form onSubmit={(e) => handleSubmit(e)}>
         <div className="flex flex-column">
           <label className="mb-1" htmlFor="peopleCount">
             Party Size
@@ -143,7 +168,9 @@ function ReservationForm() {
           formData.firstName != "" &&
           formData.lastName && (
             <div className="flex justify-content-center ">
-              <Button className="bg-green-700">Reserve</Button>
+              <Button type="submit" className="bg-green-700">
+                Reserve
+              </Button>
             </div>
           )}
       </form>

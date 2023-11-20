@@ -1,7 +1,5 @@
-export function generateHalfHourIntervals() {
+export function generateHalfHourIntervals(startHour, endHour) {
   const intervals = [];
-  const startHour = 0;
-  const endHour = 23;
 
   for (let hour = startHour; hour <= endHour; hour++) {
     for (let minute = 0; minute < 60; minute += 30) {

@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { generateHalfHourIntervals } from "../utils";
+import { db } from "../database/firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
+
+const restaurantsRef = collection(db, "restaurants");
 
 export default function DateTime({
   searchTime,
@@ -21,7 +25,14 @@ export default function DateTime({
     return date.day;
   }
 
-  const halfHourIntervals = generateHalfHourIntervals();
+  const halfHourIntervals = generateHalfHourIntervals(0, 23);
+
+  async function getOpenHours() {
+    const queryRestaurant = query(restaurantsRef, where("id", "==", "1"));
+
+    const snapshot = await getDocs(queryRestaurant);
+    snapshot.forEach((doc) => {});
+  }
 
   return (
     <div className="flex justify-content-between">
